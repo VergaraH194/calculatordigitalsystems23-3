@@ -1,0 +1,23 @@
+LIBRARY IEEE;
+USE ieee.std_logic_1164.all;
+---------------------------------------------------------------------------------------------------------------
+
+ENTITY mux2_1f IS 
+	PORT(	xa		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);
+			xm		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);
+			sel 	:	IN 	STD_LOGIC:='0';
+			y		:	OUT 	STD_LOGIC_VECTOR (7 DOWNTO 0));
+			
+END ENTITY;
+----------------------------------------------------------------------------------------------------------------
+ARCHITECTURE functional OF mux2_1f IS 
+	
+----------------------------------------------------------------------------------------------------------------
+BEGIN
+
+	y	<=	xa	WHEN sel='1'	ELSE
+			xm	WHEN sel='0'	ELSE
+			"00000000";
+				
+	
+END ARCHITECTURE functional;
