@@ -9,11 +9,12 @@ ENTITY main IS
 	PORT(	a			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
 			b			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
 			cin_a		:	IN 	STD_LOGIC;
-			cout_a	:	OUT	STD_LOGIC
+			cout_a	:	OUT	STD_LOGIC;
 			
-			
-			
-			
+			sseg		:	OUT 	STD_LOGIC_VECTOR(6 DOWNTO 0);
+			sseg1		:	OUT 	STD_LOGIC_VECTOR(6 DOWNTO 0);
+			sseg2		:	OUT 	STD_LOGIC_VECTOR(6 DOWNTO 0);
+			sseg3		:	OUT 	STD_LOGIC_VECTOR(6 DOWNTO 0)
 			);
 
 END ENTITY;
@@ -21,29 +22,74 @@ END ENTITY;
 -------------------------------------------------------------------------------------------------------------------
 
 ARCHITECTURE behaviour OF main IS
+
 SIGNAL s0	:	STD_LOGIC_VECTOR (3 DOWNTO 0);
+SIGNAL sa	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
 SIGNAL sm	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
+SIGNAL sf	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
+SIGNAL error:	STD_LOGIC;
+SIGNAL cout	:	STD_LOGIC;
+SIGNAL tens : 	STD_LOGIC_VECTOR (3 DOWNTO 0);
+SIGNAL unit : 	STD_LOGIC_VECTOR (7 DOWNTO 0);
 
 --------------------------------------------------------------------------------------------------------------------
 
 BEGIN
 
-	adder_sub	: ENTITY work.adder
+	sa <= "000" & cout & s0;
+
+
+
+	adder_sub		: ENTITY work.adder
 	PORT MAP 	(  a    =>  a,
 						b    =>  b,
 						Cin  =>  Cin_a,
 						s2   =>  s0,
-						Cout =>  cout_a);
+						Cout =>  cout);
 	
 	multiplier_0	: ENTITY work.multiplier
 	PORT MAP 	(  a    		=>  a,
 						b    		=>  b,
 						res_m	 	=>	sm);
+						
+						
+						
+	bin_to_bcd_0	: ENTITY work.bin_to_bcd
+	PORT MAP (		res_f	=> sf,
+						unit	=> unit,
+						tens1 => tens);
+						
+						
+	sw0				: ENTITY work.mux2_1f
+	PORT MAP (		xa	=> sf,
+						xm	=> sm,
+						y  => sf);
+						
+	error_0			: ENTITY work.nBitcomparator_9
+	PORT MAP (		x	=> a,
+						y	=> b,
+						lg => error);
 	
-	
+	ssega				: ENTITY work.bin_to_7seg
+	PORT MAP (		bin		=>  a,
+						sseg3		=>  sseg3,
+						bin2  	=>  b,
+						sseg2	 	=>  sseg2,
+						bin3   	=>  unit,
+						sseg	 	=>  sseg,
+						bin1		=>	 tens,
+						cin 	 	=>  cin_a,
+			         sseg1  	=>  sseg1,
+						error  	=>  error);
 	
 
 END ARCHITECTURE behaviour;
+
+
+
+
+
+
 
 
 
