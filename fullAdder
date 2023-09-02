@@ -1,0 +1,28 @@
+LIBRARY IEEE;
+USE ieee.std_logic_1164.all;
+----------------------------------------------------
+ENTITY fullAdder IS
+
+	PORT(	a		:	IN		STD_LOGIC;
+			b		:	IN		STD_LOGIC;
+			Cin	:	IN		STD_LOGIC;
+			S		:	OUT	STD_LOGIC;
+			Cout	:	OUT	STD_LOGIC);
+
+END ENTITY fullAdder;
+----------------------------------------------------
+ARCHITECTURE gateLevel OF fullAdder IS
+	
+	SIGNAL	p0		:	STD_LOGIC;
+	SIGNAL	p1		:	STD_LOGIC;
+	SIGNAL	p2		:	STD_LOGIC;
+----------------------------------------------------	
+BEGIN
+
+	S		<=	(a XOR b XOR Cin);
+	Cout	<=	(p0 OR p1);
+	p0		<=	(Cin AND p2);
+	p1		<=	(a AND b);
+	p2		<=	(a XOR b);
+	
+END ARCHITECTURE gateLevel;
