@@ -25,7 +25,7 @@ ARCHITECTURE functional OF bin_to_bcd IS
 	
 ----------------------------------------------------------------------------------------------------------------
 BEGIN
-
+		tens1 <= tens;
 	
 		fullAdder_0	: ENTITY work.sum8_with_fullAdder
 		PORT MAP (  a    =>  res_f,
@@ -78,18 +78,18 @@ BEGIN
 						);
 		encoder		: ENTITY work.priority_encoder
 		PORT MAP (  x	=>	lt10,
-						y	=> tens1
+						y	=> tens
 						);
 		multiplexor_0: ENTITY work.mux9_1gates
-		PORT MAP (  x0 =>	s0,
-						x1 =>	s1,
-						x2 =>	s2,
-						x3 =>	s3,
-						x4 =>	s4,
-						x5 =>	s5,
-						x6 =>	s6,
-						x7 =>	s7,
-						x8 =>	"00000000",
+		PORT MAP (  x0 =>	res_f,
+						x1 =>	s0,
+						x2 =>	s1,
+						x3 =>	s2,
+						x4 =>	s3,
+						x5 =>	s4,
+						x6 =>	s5,
+						x7 =>	s6,
+						x8 =>	S7,
 						x9 =>	"00000000",
 						sel=> tens,
 						y	=> unit);
