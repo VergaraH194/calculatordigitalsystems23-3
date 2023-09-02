@@ -1,0 +1,21 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+-----------------------------------------------------------------------------------------------------------------
+ENTITY nBitcomparator_9 IS 
+		PORT 	 (	x		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);
+					y		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);
+					lg		:	OUT	STD_LOGIC);
+END ENTITY;
+-----------------------------------------------------------------------------------------------------------------
+ARCHITECTURE gateLevel OF nBitcomparator_9 IS
+	
+-----------------------------------------------------------------------------------------------------------------	
+	
+BEGIN
+
+	
+	lg <= '1' when (x > "1001" OR y > "1001") else '0';
+	
+	
+END ARCHITECTURE;
