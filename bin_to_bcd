@@ -3,9 +3,9 @@ USE ieee.std_logic_1164.all;
 ---------------------------------------------------------------------------------------------------------------
 
 ENTITY bin_to_bcd IS 
-	PORT(	res_f		: 	IN 	STD_LOGIC_VECTOR(7 DOWNTO 0);
-			tens1 	: 	OUT	STD_LOGIC_VECTOR (3 DOWNTO 0);
-			unit	 	: 	OUT	STD_LOGIC_VECTOR (7 DOWNTO 0)
+	PORT(		res_f		: 	IN 	STD_LOGIC_VECTOR(7 DOWNTO 0);  --resultado a mostrar en 8 bits
+			tens1 		: 	OUT	STD_LOGIC_VECTOR (3 DOWNTO 0); --salida de las decenas del resultado decimal
+			unit	 	: 	OUT	STD_LOGIC_VECTOR (7 DOWNTO 0)  --salida de las unidades del resultado decimal
 	);
 			
 END ENTITY;
@@ -20,68 +20,72 @@ ARCHITECTURE functional OF bin_to_bcd IS
 	SIGNAL s5	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
 	SIGNAL s6	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
 	SIGNAL s7	:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL lt10 : 	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL tens : 	STD_LOGIC_VECTOR (3 DOWNTO 0);
+	SIGNAL lt10 	: 	STD_LOGIC_VECTOR (7 DOWNTO 0); --vector que determina en que momento res_f deja de ser mayor a 10
+	SIGNAL tens 	: 	STD_LOGIC_VECTOR (3 DOWNTO 0);
 	
 ----------------------------------------------------------------------------------------------------------------
 BEGIN
-		tens1 <= tens;
-	
-		fullAdder_0	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  res_f,
-						b    =>  "11110110",
-						s    =>  s0,
-						lt10 =>	lt10(7)
+		tens1 <= tens; --tens1 <= tens para poder ser llamada
+	   ----------------------------------------------------
+		fullAdder_0	: ENTITY work.sum8_with_fullAdder -- se realiza la suma de 8 bits entre el número inicial y -10
+		PORT MAP (  			a    =>  res_f,
+						b    =>  "11110110", -- -10 en complemento a 2
+						s    =>  s0,			-- res_f-10=s0
+						lt10 =>	lt10(7)     --bandera que comprueba si s0 es menor a 10
 						);
 						
 		fullAdder_1	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s0,
+		PORT MAP (  			a    =>  s0,
 						b    =>  "11110110",
-						s    =>  s1,
+						s    =>  s1,			-- s0-10=s1
 						lt10 =>	lt10(6)
 						);
 		fullAdder_2	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s1,
+		PORT MAP (  			a    =>  s1,
 						b    =>  "11110110",
 						s    =>  s2,
 						lt10 =>	lt10(5)
 						);
 		fullAdder_3	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s2,
+		PORT MAP (  			a    =>  s2,
 						b    =>  "11110110",
 						s    =>  s3,
 						lt10 =>	lt10(4)
 						);				
 		fullAdder_4	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s3,
+		PORT MAP (  			a    =>  s3,
 						b    =>  "11110110",
 						s    =>  s4,
 						lt10 =>	lt10(3)
 						);
 		fullAdder_5	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s4,
+		PORT MAP (  			a    =>  s4,
 						b    =>  "11110110",
 						s    =>  s5,
 						lt10 =>	lt10(2)
 						);
 		fullAdder_6	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s5,
+		PORT MAP (  			a    =>  s5,
 						b    =>  "11110110",
 						s    =>  s6,
 						lt10 =>	lt10(1)
 						);				
-		fullAdder_7	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s6,
+		fullAdder_7	: ENTITY work.sum8_with_fullAdder --8 sumadores pues el número máximo es 81
+		PORT MAP (  			a    =>  s6,
 						b    =>  "11110110",
 						s    =>  s7,
 						lt10 =>	lt10(0)
 						);
-		encoder		: ENTITY work.priority_encoder
-		PORT MAP (  x	=>	lt10,
+		------------------------------------------------------	
+		------------------------------------------------------
+		encoder		: ENTITY work.priority_encoder --encontrar las decenas con un encoder de prioridad
+		PORT MAP (  			x	=>	lt10, --se le envia el vector de menor a 10
 						y	=> tens
 						);
-		multiplexor_0: ENTITY work.mux9_1gates
-		PORT MAP (  x0 =>	res_f,
+		-------------------------------------------------------	
+		----------------------------------------------------
+		multiplexor_0: ENTITY work.mux9_1gates --se llama al mux para determinar las unidades con las decenas como selector
+		PORT MAP (  			x0 =>	res_f,
 						x1 =>	s0,
 						x2 =>	s1,
 						x3 =>	s2,
@@ -93,5 +97,5 @@ BEGIN
 						x9 =>	"00000000",
 						sel=> tens,
 						y	=> unit);
-						
+		-------------------------------------------------------				
 END ARCHITECTURE functional;
