@@ -1,34 +1,37 @@
 LIBRARY IEEE;
 USE ieee.std_logic_1164.all;
+---------------------------------------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------------------------------------------
-
-ENTITY priority_encoder IS
-
-	PORT(		x			: 	IN 	STD_LOGIC_VECTOR(7 DOWNTO 0);
-			y			: 	OUT 	STD_LOGIC_VECTOR(3 DOWNTO 0)
-			);
-
-END ENTITY;
---------------------------------------------------------------------------------------------------------------------
-ARCHITECTURE functional OF priority_encoder IS
-	SIGNAL lt10	:	STD_LOGIC;
---------------------------------------------------------------------------------------------------------------------
+ENTITY mux9_1gates IS 
+	PORT(		x0		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --0+0
+			x1		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --b+0
+			x2		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --b+b
+			x3		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --b+b+b
+			x4		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --4*b
+			x5		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --5*b
+			x6		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --6*b
+			x7		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --7*b
+			x8		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --8*b
+			x9		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);  --9*b
+			sel 		:	IN 		STD_LOGIC_VECTOR (3 DOWNTO 0);  --NÚMERO 1 "a"
+			y		:	OUT 		STD_LOGIC_VECTOR (7 DOWNTO 0)); --resultado elegido
+			
+END ENTITY mux9_1gates;
+----------------------------------------------------------------------------------------------------------------
+ARCHITECTURE functional OF mux9_1gates IS 
+	
+----------------------------------------------------------------------------------------------------------------
 BEGIN
 
-
-   lt10 <= '1' WHEN x<"00001010" else --bandera que determina si el resultado recibido inicialmente es menor a 10
-	   '0';
-	---------------------------------------------
-	y	<=	"1000" WHEN x(0)='1' ELSE --las decenas es 8 si lt="00000001"
-			"0111" WHEN x(1)='1' ELSE --las decenas es 7 si lt="0000001x"
-			"0110" WHEN x(2)='1' ELSE --las decenas es 6 si lt="000001xx"
-			"0101" WHEN x(3)='1' ELSE --las decenas es 5 si lt="00001xxx"
-			"0100" WHEN x(4)='1' ELSE --las decenas es 4 si lt="0001xxxx"
-			"0011" WHEN x(5)='1' ELSE --las decenas es 3 si lt="001xxxxx"
-			"0010" WHEN x(6)='1' ELSE --las decenas es 2 si lt="01xxxxxx"
-			"0001" WHEN x(7)='1' AND lt10='0' ELSE --las decenas es 1 si lt="1xxxxxxx"
-			"0000"; --si el número recibido inicialmente es menor a 10
-	---------------------------------------------		
-		
-END ARCHITECTURE;
+	y	<=	x0	WHEN sel="0000"	ELSE
+			x1	WHEN sel="0001"	ELSE
+			x2	WHEN sel="0010"	ELSE
+			x3	WHEN sel="0011"	ELSE
+			x4	WHEN sel="0100"	ELSE
+			x5	WHEN sel="0101"	ELSE
+			x6	WHEN sel="0110"	ELSE
+			x7	WHEN sel="0111"	ELSE
+			x8	WHEN sel="1000"	ELSE
+			x9	WHEN sel="1001";	
+	
+END ARCHITECTURE functional;
