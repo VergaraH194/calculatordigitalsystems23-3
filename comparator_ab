@@ -3,9 +3,9 @@ USE ieee.std_logic_1164.all;
 
 ---------------------------------------------------------------------
 ENTITY nBitcomparator_ab IS 
-		PORT 	 (	x		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);
-					y		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);
-					lg_a	:	OUT	STD_LOGIC);
+		PORT 	 (		x		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);--número 1
+					y		:	IN		STD_LOGIC_VECTOR(3 DOWNTO 0);--número 2
+					lg_a		:	OUT		STD_LOGIC);		     --bandera en caso de éxito
 END ENTITY;
 ----------------------------------------------------------------------
 ARCHITECTURE gateLevel OF nBitcomparator_ab IS
@@ -14,7 +14,7 @@ ARCHITECTURE gateLevel OF nBitcomparator_ab IS
 BEGIN
 
 	
-	lg_a <= '1' when (x < y) else '0';
+	lg_a <= '1' when (x < y) else '0';--compara si "a" es menor a "b" y alza una bandera en tal caso
 	
 	
 	
