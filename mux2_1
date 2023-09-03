@@ -3,10 +3,10 @@ USE ieee.std_logic_1164.all;
 ---------------------------------------------------------------------------------------------------------------
 
 ENTITY mux2_1f IS 
-	PORT(	xa		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);
-			xm		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);
-			sel 	:	IN 	STD_LOGIC:='0';
-			y		:	OUT 	STD_LOGIC_VECTOR (7 DOWNTO 0));
+	PORT(		xa		:	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);--resultado de la suma
+			xm		: 	IN		STD_LOGIC_VECTOR (7 DOWNTO 0);--resultado de la multiplicación
+			sel 		:	IN 		STD_LOGIC:='0';
+			y		:	OUT 		STD_LOGIC_VECTOR (7 DOWNTO 0));
 			
 END ENTITY;
 ----------------------------------------------------------------------------------------------------------------
@@ -15,8 +15,8 @@ ARCHITECTURE functional OF mux2_1f IS
 ----------------------------------------------------------------------------------------------------------------
 BEGIN
 
-	y	<=	xa	WHEN sel='1'	ELSE
-			xm	WHEN sel='0'	ELSE
+	y	<=	xa	WHEN sel='1'	ELSE --si sw0=1 se muestra la suma
+			xm	WHEN sel='0'	ELSE --si sw0=1 se muestra la multiplicación
 			"00000000";
 				
 	
