@@ -3,11 +3,11 @@ USE ieee.std_logic_1164.all;
 ----------------------------------------------------
 ENTITY fullAdder IS
 
-	PORT(	a		:	IN		STD_LOGIC;
-			b		:	IN		STD_LOGIC;
-			Cin	:	IN		STD_LOGIC;
-			S		:	OUT	STD_LOGIC;
-			Cout	:	OUT	STD_LOGIC);
+	PORT(		a		:	IN		STD_LOGIC; --número 1 de entrada
+			b		:	IN		STD_LOGIC; --número 2 de entrada
+			Cin		:	IN		STD_LOGIC; --carry in
+			S		:	OUT		STD_LOGIC; -- bit de salida
+			Cout		:	OUT		STD_LOGIC);--carry out, 1 en caso de overflow
 
 END ENTITY fullAdder;
 ----------------------------------------------------
@@ -19,9 +19,9 @@ ARCHITECTURE gateLevel OF fullAdder IS
 ----------------------------------------------------	
 BEGIN
 
-	S		<=	(a XOR b XOR Cin);
-	Cout	<=	(p0 OR p1);
-	p0		<=	(Cin AND p2);
+	S		<=	(a XOR b XOR Cin);--determinar el bit de salida
+	Cout		<=	(p0 OR p1);	  --determinar en caso de haber overflow
+	p0		<=	(Cin AND p2);			
 	p1		<=	(a AND b);
 	p2		<=	(a XOR b);
 	
