@@ -1,102 +1,103 @@
 LIBRARY IEEE;
 USE ieee.std_logic_1164.all;
-USE IEEE.NUMERIC_STD.ALL;
+
 ----------------------------------------------------
 ENTITY multiplier IS
 
-	PORT(	a			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
-			b			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
-			cin		:	IN 	STD_LOGIC:='0';
-			res_m		:	OUT 	STD_LOGIC_VECTOR(7 DOWNTO 0)
+	PORT(		a			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0); --número 1
+			b			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0); --número 2
+			cin			:	IN 	STD_LOGIC:='0';			--carry in
+			res_m			:	OUT 	STD_LOGIC_VECTOR(7 DOWNTO 0)	--resultado de la multiplicación
 	);
 
 END ENTITY;
 ----------------------------------------------------
-ARCHITECTURE gateLevel OF multiplier IS
+ARCHITECTURE functional OF multiplier IS
 	
 	 
-	SIGNAL bx		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL p0		:	STD_LOGIC_VECTOR (3 DOWNTO 0);
-	SIGNAL s0		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s1		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s2		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s3		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s4		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s5		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s6		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s7		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s8		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL s9		:	STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL q0		:	STD_LOGIC;
+	SIGNAL bx		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --señal "b" pero de 8 bits
+	SIGNAL s0		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar 0+0
+	SIGNAL s1		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar b+0
+	SIGNAL s2		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar b+b
+	SIGNAL s3		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar b+b+b
+	SIGNAL s4		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar b+b+b+b
+	SIGNAL s5		:	STD_LOGIC_VECTOR (7 DOWNTO 0); -- .
+	SIGNAL s6		:	STD_LOGIC_VECTOR (7 DOWNTO 0); -- .
+	SIGNAL s7		:	STD_LOGIC_VECTOR (7 DOWNTO 0); -- .
+	SIGNAL s8		:	STD_LOGIC_VECTOR (7 DOWNTO 0); -- .
+	SIGNAL s9		:	STD_LOGIC_VECTOR (7 DOWNTO 0); --salida de sumar 9 veces b
+	SIGNAL q0		:	STD_LOGIC;			--carry out de las sumas que como la multiplciación no superará 81 no influye
 ----------------------------------------------------	
 BEGIN
 		
-		bx <= "0000" & b;
+		bx <= "0000" & b; --concatenar "b" con 4 ceros para obtener un vector de 8 bits
 
 	
-
-		fullAdder_0	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  "00000000",
+		------------------------------------------------
+		fullAdder_0	: ENTITY work.sum8_with_fullAdder --realizar la suma de 8 bits 10 veces para tener desde a=0 hasta a=9
+		PORT MAP (  			a    =>  "00000000",
 						b    =>  "00000000",
 						Cin  =>  Cin,
 						s    =>  s0,
 						Cout =>  q0);
 		fullAdder_1	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s0,
+		PORT MAP (  			a    =>  s0,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s1,
 						Cout =>  q0);
 		fullAdder_2	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s1,
+		PORT MAP (  			a    =>  s1,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s2,
 						Cout =>  q0);
 		fullAdder_3	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s2,
+		PORT MAP (  			a    =>  s2,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s3,
 						Cout =>  q0);
 		fullAdder_4	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s3,
+		PORT MAP (  			a    =>  s3,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s4,
 						Cout =>  q0);
 		fullAdder_5	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s4,
+		PORT MAP (  			a    =>  s4,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s5,
 						Cout =>  q0);
 		fullAdder_6	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s5,
+		PORT MAP (  			a    =>  s5,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s6,
 						Cout =>  q0);
 		fullAdder_7	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s6,
+		PORT MAP (  			a    =>  s6,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s7,
 						Cout =>  q0);
 		fullAdder_8	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s7,
+		PORT MAP (  			a    =>  s7,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s8,
 						Cout =>  q0);
 		fullAdder_9	: ENTITY work.sum8_with_fullAdder
-		PORT MAP (  a    =>  s8,
+		PORT MAP (  			a    =>  s8,
 						b    =>  bx,
 						Cin  =>  Cin,
 						s    =>  s9,
 						Cout =>  q0);
-		multiplexor_0: ENTITY work.mux9_1gates
-		PORT MAP (  x0 =>	s0,
+		-------------------------------------------------
+		-----------------------------------------
+		multiplexor_0: ENTITY work.mux9_1gates --mux que recibe 10 entradas y selecciona una dependiendo de "a"
+		PORT MAP (  			x0 =>	s0,
 						x1 =>	s1,
 						x2 =>	s2,
 						x3 =>	s3,
@@ -106,6 +107,7 @@ BEGIN
 						x7 =>	s7,
 						x8 =>	s8,
 						x9 =>	s9,
-						sel=> a,
-						y	=> res_m);
-END ARCHITECTURE gateLevel;
+						sel=> 	a,
+						y  =>   res_m);
+		------------------------------------------
+END ARCHITECTURE functional;
