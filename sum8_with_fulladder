@@ -1,17 +1,17 @@
 LIBRARY IEEE;
 USE ieee.std_logic_1164.all;
-----------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
 ENTITY sum8_with_fullAdder IS
 
-	PORT(	a		:	IN		STD_LOGIC_VECTOR(7 DOWNTO 0);
+	PORT(		a		:	IN		STD_LOGIC_VECTOR(7 DOWNTO 0);
 			b		:	IN		STD_LOGIC_VECTOR(7 DOWNTO 0);
-			Cin	:	IN		STD_LOGIC:='0';
-			S		:	OUT	STD_LOGIC_VECTOR(7 DOWNTO 0);
-			Cout	:	OUT	STD_LOGIC;
-			lt10	:	OUT	STD_LOGIC);
+			Cin		:	IN		STD_LOGIC:='0';
+			S		:	OUT		STD_LOGIC_VECTOR(7 DOWNTO 0);
+			Cout		:	OUT		STD_LOGIC;
+			lt10		:	OUT		STD_LOGIC);	--bandera en caso de que el número sea menor a 10						
 
 END ENTITY;
-
+---------------------------------------------------------------------------------------------------------------
 ARCHITECTURE functional OF sum8_with_fullAdder IS
 	
 	SIGNAL	q0		:	STD_LOGIC;
@@ -22,11 +22,11 @@ ARCHITECTURE functional OF sum8_with_fullAdder IS
 	
 BEGIN
 
-		s <= s1 & s0;
+		s 	<= s1 & s0; --concatenar las respuestas de ambos sumadores de 4 bits, respuesta final
 		ss <= s1 & s0;
-
-		fullAdder_0: ENTITY work.sum4_with_fullAdder
-		PORT MAP (  a(0) =>  a(0),
+		---------------------------------------------------------------------------
+		fullAdder_0: ENTITY work.sum4_with_fullAdder --se llama dos veces al sumador de 4 bits, enviando primero los primeros cuatro bits
+		PORT MAP (  			a(0) =>  a(0),
 						b(0) =>  b(0),
 						a(1) =>  a(1),
 						b(1) =>  b(1),
@@ -39,7 +39,7 @@ BEGIN
 						Cout =>  q0);
 						
 		fullAdder_1: ENTITY work.sum4_with_fullAdder
-		PORT MAP (  a(0) =>  a(4),
+		PORT MAP (  			a(0) =>  a(4),
 						b(0) =>  b(4),
 						a(1) =>  a(5),
 						b(1) =>  b(5),
@@ -50,9 +50,10 @@ BEGIN
 						Cin  =>  q0,
 						s    =>  s1,
 						Cout =>  q1);
-						
-		comparator_lt10	: work.nBitcomparator_9
-		PORT MAP(	res 	=>	ss,
+		----------------------------------------------------------------------------
+		---------------------------------------------
+		comparator_lt10	: work.nBitcomparator_9 --para el código bin_to_bcd, ir comprobado cada resta si el número es menor a 10
+		PORT MAP(			res 	=> ss,
 						lt10 	=> lt10);
-						
+		---------------------------------------------				
 END ARCHITECTURE functional;
