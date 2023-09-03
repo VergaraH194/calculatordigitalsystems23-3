@@ -1,84 +1,86 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
-USE IEEE.NUMERIC_STD.ALL;
 ----------------------------------------------------------------------------------------------------------------
 ENTITY adder IS
-
- PORT ( 	a			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
-			b			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);
-			cin		:	IN 	STD_LOGIC :='0';
-			s2			:	OUT   STD_LOGIC_VECTOR (3 DOWNTO 0);
-			cout		:	OUT	STD_LOGIC
+  -------------------------------------------------------
+ PORT ( 		a			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);	--número de entrada 1
+			b			: 	IN 	STD_LOGIC_VECTOR(3 DOWNTO 0);	--número de entrada 2
+			cin			:	IN 	STD_LOGIC :='0';		--carry in que es sw1, 1 para suma, 0 para resta
+			s2			:	OUT   	STD_LOGIC_VECTOR (3 DOWNTO 0);	--resultado de la suma 
+			cout			:	OUT	STD_LOGIC			--carry out de la suma en caso de existir overflow
 			);
-
+  --------------------------------------------------------
 END ENTITY adder;
 ----------------------------------------------------------------------------------------------------------------
 ARCHITECTURE behaviour of adder IS
 
-	SIGNAL p0	:	STD_LOGIC_VECTOR (3 DOWNTO 0);
-	SIGNAL s0	:	STD_LOGIC_VECTOR (3 DOWNTO 0);
-	SIGNAL s1	:	STD_LOGIC_VECTOR (3 DOWNTO 0);
-	SIGNAL amenorb : STD_LOGIC;
-	SIGNAL q0	:	STD_LOGIC;
-	SIGNAL q1	:	STD_LOGIC;
-	SIGNAL q2	:	STD_LOGIC;
+	SIGNAL p0		:	STD_LOGIC_VECTOR (3 DOWNTO 0); --serie de bits que suman a "a"
+	SIGNAL s0		:	STD_LOGIC_VECTOR (3 DOWNTO 0); --resultado parcial de la suma inicial
+	SIGNAL s1		:	STD_LOGIC_VECTOR (3 DOWNTO 0); --resultado del complemento a 2 del resultado
+	SIGNAL amenorb		: 	STD_LOGIC;			--bandera que señala si a es menor que b
+	SIGNAL q0		:	STD_LOGIC;			--carry out primer sumador
+	SIGNAL q1		:	STD_LOGIC;			--carry out segundo sumador
+	SIGNAL q2		:	STD_LOGIC;			--carry out tercer sumador
 	
 -----------------------------------------------------------------------------------------------------------------
 BEGIN
-
-	p0(0) <= b(0) XOR (NOT cin);
+	
+	--si cin=1 se realizará el complemento a 2 a "b" y se le sumará 1 para así tener un restador
+	p0(0) <= b(0) XOR (NOT cin);	
 	p0(1) <= b(1) XOR (NOT cin);
 	p0(2) <= b(2) XOR (NOT cin);
 	p0(3) <= b(3) XOR (NOT cin);
 	
 	
 	
-	s2		<= s1	WHEN	amenorb='1' AND cin='0' else
-				s0 WHEN  amenorb='1' AND cin='1' else
-				s0 WHEN 	amenorb='0'					else "0000";
+	s2		<= 	s1	WHEN	amenorb='1' AND cin='0' else  		--la salida final es el complemento a 2 del resultado si es una resta
+				s0	WHEN 	amenorb='1' AND cin='1' else		--la salida final es la misma salida parcial en caso de ser una suma
+				s0 	WHEN 	amenorb='0'		else "0000";	--la salida final es la misma salida parcial en caso de ser una suma
 	
 				
 						
 		
 	
-	
-		fullAdder_0	: ENTITY work.fullAdder
-		PORT MAP (  a    =>  a(0),
+	   ------------------------------------
+		fullAdder_0	: ENTITY work.fullAdder	--hacer suma de 4 bits entre "a" y "p0"
+		PORT MAP (  			a    =>  a(0),
 						b    =>  p0(0),
-						Cin  =>  (NOT Cin),
+						Cin  =>  (NOT Cin),     --not cin puesto que se quiere que sw1 sea 0 para que se realice la resta, pero para el sistema del restado se necesita que este valor sea 1
 						s    =>  s0(0),
 						Cout =>  q0);
 						
 		fullAdder_1	: ENTITY work.fullAdder
-		PORT MAP (  a    =>  a(1),
+		PORT MAP (  			a    =>  a(1),
 						b    =>  p0(1),
 						Cin  =>  q0,
 						s    =>  s0(1),
 						Cout =>  q1);
 						
 		fullAdder_2	: ENTITY work.fullAdder
-		PORT MAP (  a    =>  a(2),
+		PORT MAP (  			a    =>  a(2),
 						b    =>  p0(2),
 						Cin  =>  q1,
 						s    =>  s0(2),
 						Cout =>  q2);
 						
 		fullAdder_3	: ENTITY work.fullAdder
-		PORT MAP (  a    =>  a(3),
+		PORT MAP ( 			a    =>  a(3),
 						b    =>  p0(3),
 						Cin  =>  q2,
 						s    =>  s0(3),
 						Cout =>  Cout);
-						
-		fullAdder_c2 : ENTITY work.sum4_with_fullAdder
-		PORT MAP (  a    =>  (NOT s0),
+		---------------------------------------
+      ---------------------------------------------------		
+		fullAdder_c2 : ENTITY work.sum4_with_fullAdder	--realizar el complemento a 2 del resultado
+		PORT MAP (  			a    =>  (NOT s0),
 						b    =>  "0001",
 						s    =>  s1);
-						
-		comparator_0 : ENTITY work.nBitcomparator_ab
-		PORT MAP (  x    	=>  a,
+		----------------------------------------------------	
+      ------------------------------------------------		
+		comparator_0 : ENTITY work.nBitcomparator_ab		--comparar si "a" es menor a "b" y alzar bandera en tal caso
+		PORT MAP ( 			x    	=>  a,
 						y    	=>  b,
-						lg_a  =>  amenorb);
-						
+						lg_a 	=>  amenorb);
+		------------------------------------------------				
 		
 END behaviour;
