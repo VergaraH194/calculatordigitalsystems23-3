@@ -52,7 +52,7 @@ BEGIN
 						Cout =>  q1);
 		----------------------------------------------------------------------------
 		---------------------------------------------
-		comparator_lt10	: work.nBitcomparator_9 --para el código bin_to_bcd, ir comprobado cada resta si el número es menor a 10
+		comparator_lt10	: ENTITY work.nBitcomparator_9 --para el código bin_to_bcd, ir comprobado cada resta si el número es menor a 10
 		PORT MAP(			res 	=> ss,
 						lt10 	=> lt10);
 		---------------------------------------------				
