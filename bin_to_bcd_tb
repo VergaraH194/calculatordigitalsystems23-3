@@ -7,15 +7,15 @@ END ENTITY bin_to_bcd_tb;
 ARCHITECTURE testbench OF bin_to_bcd_tb IS
    ---------------------------------------
 	COMPONENT bin_to_bcd IS
-	PORT (res_f		: 	IN 	STD_LOGIC_VECTOR(7 DOWNTO 0);  --resultado a mostrar en 8 bits
+	PORT (		res_f	: 	IN 	STD_LOGIC_VECTOR(7 DOWNTO 0);  --resultado a mostrar en 8 bits
 			tens1 	: 	OUT	STD_LOGIC_VECTOR (3 DOWNTO 0); --salida de las decenas del resultado decimal
-			unit	 	: 	OUT	STD_LOGIC_VECTOR (7 DOWNTO 0)  --salida de las unidades del resultado decimal
+			unit	: 	OUT	STD_LOGIC_VECTOR (7 DOWNTO 0)  --salida de las unidades del resultado decimal
 				);
 	END COMPONENT bin_to_bcd;
 	----------------------------------------
 	SIGNAL res_f_t 	: std_LOGIC_VECTOR (7 DOWNTO 0):= "00000000";
 	SIGNAL tens1_t 	: std_LOGIC_VECTOR (3 DOWNTO 0) := "0000";
-	SIGNAL unit_t		: STD_LOGIC_VECTOR (7 DOWNTO 0):= "00000000";
+	SIGNAL unit_t	: STD_LOGIC_VECTOR (7 DOWNTO 0):= "00000000";
 	
 	
 	
